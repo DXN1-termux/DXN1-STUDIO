@@ -673,8 +673,8 @@ R62 = [
         and 'camSpeed:S.camSpeed,' in html
         and 'if(p.camSpeed>0) S.camSpeed=p.camSpeed;' in html
         and '$("vp-camspeed").classList.add("on");' in html),
-    ("the splash rotation — the fourth splash is real PNG bytes",
-        'const SPLASHES=["assets/splash.png","assets/splash-v2.png","assets/splash-v3.png","assets/splash-v4.png"];' in html
+    ("the splash rotation — the fifth splash is real PNG bytes",
+        'const SPLASHES=["assets/splash.png","assets/splash-v2.png","assets/splash-v3.png","assets/splash-v4.png","assets/splash-v5.png"];' in html
         and 'h.src=SPLASHES[Math.floor(Math.random()*SPLASHES.length)];' in html
         and (_png_magic("splash-v4.png") or b"") == b"\x89PNG"
         and os.path.getsize(os.path.join(assets_dir, "splash-v4.png")) > 400000),
@@ -711,6 +711,29 @@ R63 = [
 ]
 missing63 = [nm for nm, ok in R63 if not ok]
 pin("all 3 R63 studio laws present", not missing63, ", ".join(missing63))
+
+# THE R64 LAW GROUP — THE SCENE CHIPS (the campaign map becomes a
+# per-scene launcher: each biome tile wears its scenes' REAL generated
+# thumbnails as mini chips, a click opens THAT scene, the active chip
+# glows, the hop arrows mirror the levels' own next fields) and THE
+# FIFTH SPLASH (the descent gauntlet's key art, the JPEG-bytes law's
+# 26th catch, re-encoded real PNG).
+R64 = [
+    ("the scene chips — the campaign tiles wear their scenes' real thumbs",
+        '#cb-map .biome .chips{position:absolute; left:4px; right:4px; bottom:9px;' in html
+        and '#cb-map .biome .chips .chip.on{border-color:var(--brand);' in html
+        and 'const chips=document.createElement("div"); chips.className="chips";' in html
+        and 'chip.style.backgroundImage=`url(\'${(sc&&sc.thumb)||"assets/thumb-playground.png"}\')`;' in html
+        and 'chip.addEventListener("click",ev=>{ ev.stopPropagation(); loadScene(f); });' in html),
+    ("the hop arrows tell the chain's truth (the scenes' own next fields)",
+        'const nx=((S.scenes[prev]&&S.scenes[prev].next)||"").replace(/^.*\\//,"");' in html
+        and 'hop.textContent=(nx===f)?"\\u2192":"\\u00b7";' in html),
+    ("the fifth splash — the descent's key art is real PNG bytes",
+        (_png_magic("splash-v5.png") or b"") == b"\x89PNG"
+        and os.path.getsize(os.path.join(assets_dir, "splash-v5.png")) > 400000),
+]
+missing64 = [nm for nm, ok in R64 if not ok]
+pin("all 3 R64 studio laws present", not missing64, ", ".join(missing64))
 
 
 fails = [n for n, ok in pins if not ok]

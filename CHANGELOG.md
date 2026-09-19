@@ -1,3 +1,95 @@
+## v3.1.142 — the descent walk, the wall, and the scene chips
+
+*(the R64 session: the gauntlet got its own walk and the round's engine
+is three physics finds — the stand-fire drift law, the pre-release
+drift bug, and the hip-level wall. The campaign map became a
+per-scene launcher.)*
+
+### the probes
+
+- **THE DESCENT WALK IS A LAW**: the eighth dedicated walk,
+  `dec_level7_probe.py` (--scene level-7, the 180s gate cap belongs to
+  the gauntlet alone) — four fangs ON deck tops plus the floating
+  fang-a, two static hovering saws, a carousel-saw past the mid-deck's
+  edge, lift-1 (430↔300 @85) feeding the mid-deck, vault-lift
+  (400↔480 @65) feeding the vault floor, the magnet at 150 collecting
+  the gems; FIVE STRAIGHT GREENS (21.4s/1, 21.2s/0, 24.4s/1, 21.5s/1,
+  22.0s/1 honest deaths) against the 170 cap with 148s to spare.
+- **THE STAND-FIRE DRIFT LAW** (the first red's autopsy): every zone
+  fires from a SETTLED stand — the drift_wd ramp from vx~0 flies
+  294.8/290.7/286.5, the draft's walk-fire windows stalled 20-24px
+  short of the gates forever (the hero stood at x=336.8 for 171
+  seconds, zero deaths, the receipt never spoken). Bands 1/2
+  re-derived to [356, 380] and [679, 709].
+- **THE DRIFT_PH PRE-RELEASE BUG** (the second red's autopsy):
+  drift_ph(t, t1, vx) returned drift_wd(t1, vx) even when t < t1 — a
+  crossing BEFORE the release flies drift_wd(t, vx), the hold is
+  still sustained there; the bug overstated the saw-2 ascent drift by
+  60px and the (a) gate rejected every honest candidate for 100
+  seconds (the hero stood at x=1265.8). Also the stop clamp: the
+  decay ends at v1/220 — the engine's own friction clamps at vx==0,
+  a soft release from a stand fire must not go negative.
+- **THE WALL** (the third red's autopsy, the round's deepest find):
+  the mid-deck's left face (x 1600, y 300..326) is a WALL at hip
+  level — the horizontal resolve (spark.cpp 306-313) pins a walking
+  hero at x=1566 FOREVER (the body's right touches 1600 and gets
+  pushed back every frame while the body spans the wall's y-band);
+  the walk-off is geometrically impossible (the feet must be < 370
+  for the mid-deck's 4px overlap catch, but the wall blocks every
+  walk while the body spans 300..326); and every right-half fire
+  crosses fang-3's x-window (1726..1794) with the feet inside its
+  band — the wall caps the fire at 1566, the transit demands
+  1565..1566: a 1px lottery. THE HONEST PATH: fire from the lift's
+  LEFT half (1460..1489) with the partial hold — the landing
+  [1676, 1712] sits BEFORE fang-3, the body's right clears the
+  fang's x-window by 48px, then patrol left to [1600, 1615] for the
+  strip jump.
+- **THE FOUR SOLVERS**: floor_solve (drop-2 → the shaft-floor: the
+  landing [1238, 1268] between fang-2's band and saw-2's standing
+  shadow — the full hold cannot), lift1_solve (catch_sim_ph: the
+  deck simulated at 5ms against the partial-hold drift; THE PHASE
+  GATE pxi==0 && y<=359 — a fire on the up leg meets the deck 70px
+  higher and the park catch misses into the 1380..1460 gap; the
+  landing window [1440, 1538] is the honest AABB), strip_solve (the
+  minimum partial-hold drift is 213px — the fire zone [1600, 1615]
+  is FORCED, the release lands [1798, 1830] past fang-3's transit),
+  liftjump_solve (above). The engine contract re-read in spark.cpp:
+  the landing snaps on ANY AABB overlap, the support lasts until the
+  WHOLE body leaves the deck, the tagless solids block horizontally,
+  movers only vertically, spikes/hazards kill on the raw box.
+
+### the studio
+
+- **THE SCENE CHIPS** (the marquee): the campaign map became a
+  per-scene launcher — each biome tile wears its scenes' REAL
+  generated thumbnails (the same thumb-l*.png the Content Browser's
+  cards wear) as mini chips riding the tile's bottom; a click opens
+  THAT scene directly (stopPropagation — the tile click keeps the
+  first-scene shortcut), the active scene's chip glows brand violet,
+  hover lifts the chip and speaks its name, and a hop arrow joins two
+  chips ONLY when the level chain really hops there (the scenes' own
+  next fields — the map tells the truth, a · marks the biome seam).
+  Twelve chips across the four tiles: twilight L2→L7→L12, industrial
+  L1→L6, dawn L3→L5→L8, void L4→L9→L10→L11.
+- **THE FIFTH SPLASH**: the descent gauntlet's own key art (the
+  leaning fangs, the hovering saws, the lift, the midnight indigo) —
+  the mandatory gen (36.7s via the bun SDK) and the JPEG-bytes law's
+  **26th catch** (arrived JPEG wearing a .png name, 78611 bytes,
+  re-encoded to a real 649226-byte PNG, magic verified); the boot
+  rotation now wears five faces.
+- **THE LAW**: ui_editor_probe pins 30 (was 29) — the R64 law group
+  pins the chips' mechanism (the CSS, the builder, the
+  stopPropagation wiring), the hop arrows' truth test, and the fifth
+  splash's real PNG bytes; the R62 splash law re-pinned to the
+  five-splash array.
+
+### the release
+
+- Five corners wear 3.1.142; the 20:00 UTC boundary is covered by
+  this tag (v3.1.141 held 18:00 and 19:00). This tag's release must
+  carry dxn3-v3.1.142.tar.gz (the v-prefixed name). Gates ALL GREEN,
+  61 probes walked (dec_level7_probe auto-promoted to gate 8).
+
 ## v3.1.141 — the ascent walk, the partial hold, and the look-sens pill
 
 *(the R63 session: the climb got its own walk, its own biome, and the
